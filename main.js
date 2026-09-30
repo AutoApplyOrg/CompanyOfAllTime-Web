@@ -7,10 +7,14 @@ const countEl = document.getElementById('applied-count');
 setInterval(() => { countEl.textContent = ++count; }, 1400);
 
 function setupMotion() {
-  // hover wobble on tilted stickers
+  const touch = window.matchMedia('(hover: none)').matches;
+  const wobble = [{ rotate: '0deg', translate: '0 0' }, { rotate: '-3deg', translate: '0 -6px' }, { rotate: '2deg', translate: '0 -4px' }, { rotate: '-1deg', translate: '0 -1px' }, { rotate: '0deg', translate: '0 0' }];
+  const stickers = [];
+  // hover wobble on tilted stickers (touch: wobble once on entering view)
   document.querySelectorAll('[style*="rotate("]').forEach(el => {
     if (el.closest('h1') || el.offsetWidth > 700 || el.dataset.wob) return;
     el.dataset.wob = 1;
+    if (touch) { stickers.push(el); return; }
     el.addEventListener('mouseenter', () => el.animate([{ rotate: '0deg', translate: '0 0' }, { rotate: '-2.5deg', translate: '0 -6px' }, { rotate: '1.5deg', translate: '0 -6px' }, { rotate: '0deg', translate: '0 -5px' }], { duration: 420, easing: 'ease-out', fill: 'forwards' }));
     el.addEventListener('mouseleave', () => el.animate([{ translate: '0 -5px' }, { translate: '0 0' }], { duration: 260, easing: 'ease-out', fill: 'forwards' }));
   });
@@ -25,15 +29,24 @@ function setupMotion() {
     });
   }
   let raf = 0;
-  const move = e => {
+  const reset = () => letters.forEach(l => { l.style.translate = ''; l.style.rotate = ''; });
+  const push = (x, y) => {
     cancelAnimationFrame(raf);
     raf = requestAnimationFrame(() => letters.forEach((l, i) => {
-      const r = l.getBoundingClientRect(), dx = r.left + r.width / 2 - e.clientX, dy = r.top + r.height / 2 - e.clientY, d = Math.hypot(dx, dy), R = 150;
+      const r = l.getBoundingClientRect(), dx = r.left + r.width / 2 - x, dy = r.top + r.height / 2 - y, d = Math.hypot(dx, dy), R = 150;
       if (d < R) { const f = (1 - d / R) * 26 / (d || 1); l.style.translate = `${dx * f}px ${dy * f}px`; l.style.rotate = `${(i % 2 ? 1 : -1) * (1 - d / R) * 14}deg`; }
       else if (l.style.translate) { l.style.translate = ''; l.style.rotate = ''; }
     }));
   };
-  window.addEventListener('mousemove', move);
+  window.addEventListener('mousemove', e => push(e.clientX, e.clientY));
+  if (touch) {
+    const wob = () => stickers.forEach(el => { if (!el.dataset.wobbed && el.getBoundingClientRect().top < innerHeight * 0.85) { el.dataset.wobbed = 1; setTimeout(() => el.animate(wobble, { duration: 700, easing: 'ease-out' }), 350); } });
+    window.addEventListener('scroll', wob, { passive: true, capture: true }); wob();
+    // tap scatters the headline letters, dragging pushes them like the cursor does
+    h1.addEventListener('click', () => { letters.forEach(l => { l.style.translate = `${(Math.random() - .5) * 40}px ${(Math.random() - .5) * 40}px`; l.style.rotate = `${(Math.random() - .5) * 40}deg`; }); setTimeout(reset, 380); });
+    h1.addEventListener('touchmove', e => { const t = e.touches[0]; t && push(t.clientX, t.clientY); }, { passive: true });
+    h1.addEventListener('touchend', reset);
+  }
   // sections fly in, off-kilter
   const show = s => { s.style.opacity = 1; s.style.translate = '0 0'; s.style.rotate = '0deg'; s.dataset.shown = 1; };
   const pending = [];

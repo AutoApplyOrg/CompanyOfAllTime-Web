@@ -4,3 +4,25 @@ a:hover{color:#ff4fa3}
 @keyframes marq{to{transform:translateX(-50%)}}
 .press:active{transform:translate(4px,4px);box-shadow:2px 2px 0 #f5c518!important}
 [hidden]{display:none!important}
+
+/* layout that changes on phones (<640px) */
+.site-nav{padding:18px 28px}
+.nav-links{display:flex}
+.hero{padding:72px 28px 96px}
+.seal{top:24px;width:150px;height:150px;font-size:17px}
+.cut-note{max-width:calc(100% - 200px)}
+.hero h1{padding-right:170px}
+.sec{padding:100px 28px}
+.signature{position:absolute}
+.card-wrap{padding:20px}
+@media (max-width:639.98px){
+  .nav-tag,.nav-links{display:none}
+  .site-nav{padding:14px 16px}
+  .hero{padding:56px 18px 64px}
+  .seal{top:10px;width:92px;height:92px;font-size:11px}
+  .cut-note{max-width:calc(100% - 96px)}
+  .hero h1{padding-right:0}
+  .sec{padding:72px 18px}
+  .signature{position:static}
+  .card-wrap{padding:12px 8px}
+}
