@@ -2,20 +2,20 @@
 
 Landing page for [companyofalltime.com](https://companyofalltime.com): a company that will make many products, eventually. The first one is AutoApply.
 
-It's a plain static site with no build step and no dependencies.
+It's a plain static site with no build step and no dependencies. Only the `site/` folder is published; everything else in the repo (this README, the license, CI config) stays off the website.
 
 | File | What it is |
 |---|---|
-| `index.html` | Page markup, with most styling inline (as exported from Claude Design) |
-| `styles.css` | Global styles, animations, and the phone layout (below 640px) |
-| `main.js` | Counter, cursor/touch effects, scroll-in animations, waitlist form |
-| `assets/` | Logo (also used as the favicon and link-preview image) |
-| `CNAME` | Custom domain for GitHub Pages |
+| `site/index.html` | Page markup, with most styling inline (as exported from Claude Design) |
+| `site/styles.css` | Global styles, animations, and the phone layout (below 640px) |
+| `site/main.js` | Counter, cursor/touch effects, scroll-in animations, waitlist form |
+| `site/assets/` | Logo (also used as the favicon and link-preview image) |
+| `site/CNAME` | Custom domain for GitHub Pages |
 
 ## Run locally
 
 ```sh
-python3 -m http.server 8000
+python3 -m http.server 8000 -d site
 ```
 
 Then open http://localhost:8000.
