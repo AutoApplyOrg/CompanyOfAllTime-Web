@@ -1,0 +1,6 @@
+body{margin:0;background:#f4ecd8;color:#111;font-family:'DM Mono',monospace}
+a{color:#2340ff}
+a:hover{color:#ff4fa3}
+@keyframes marq{to{transform:translateX(-50%)}}
+.press:active{transform:translate(4px,4px);box-shadow:2px 2px 0 #f5c518!important}
+[hidden]{display:none!important}
